@@ -1,2 +1,2 @@
-MK server.go:21: Listener started... 96
-MK server.go:50: Received connection from 192.168.86.42:44606
+MK server.go:94: Listening on [::]:8989
+MK server.go:96: Accepting connection request

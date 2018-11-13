@@ -7,6 +7,7 @@ import (
 	"net"
 )
 
+var conn net.Conn
 var logger = mkLogger.GetInstance()
 
 type client struct {
@@ -15,16 +16,26 @@ type client struct {
 	wc chan string
 }
 
-func StartClient(ipAddress string) {
+type mouse struct {
+	x, y  int
+	click chan bool
+}
+
+func StartClient(ipAddress string) (string, error) {
 
 	conn, err := net.Dial("tcp", ipAddress+":8989")
-	if err != nil{
+	if err != nil {
 		logger.Println(err)
-		fmt.Println("Error connecting to IP...")
+		return "Error connecting to IP...", err
 	}
 	fmt.Fprintf(conn, "GET / HTTP/1.0\r\n\r\n")
 	status, err := bufio.NewReader(conn).ReadString('\n')
+	if err != nil {
+		logger.Println(err)
+		return "Error with reader...", err
+	}
 	fmt.Println(status)
+	return "Success!", nil
 }
 
 func (c *client) writeMonitor() {
@@ -36,3 +47,16 @@ func (c *client) writeMonitor() {
 		}
 	}()
 }
+
+/*func sendMouse() {
+	for {
+		x, y := robotgo.GetMousePos()
+		conn.Write(x, y)
+	}
+}
+
+func createWindow() {
+	if runtime.GOOS == "windows"{
+
+	}
+}*/
